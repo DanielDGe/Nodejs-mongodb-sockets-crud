@@ -1,0 +1,11 @@
+{
+    "presets": [
+        "@babel/preset-env"
+    ],
+    "ignore": [ //Ignoralo ya que es codigo de frontend
+        "src/public/**/*.js"
+    ],
+    "plugins": [
+        "@babel/plugin-transform-runtime"
+    ]
+}
