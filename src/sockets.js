@@ -11,9 +11,15 @@ export default (io) => {
         console.log("nuevo socket connectado:", socket.id);
 
         // Send all messages to the client
-        const emitNotes = async () => {
+        const emitNotes = async (prop) => {
             const notes = await Note.find();
-            io.emit("server:loadnotes", notes);
+
+            if (prop === "confirm") {
+                io.emit("server:loadnotes", notes);
+            } else {
+                socket.emit("server:loadnotes", notes);
+            }
+            
         };
         emitNotes();
 
@@ -25,7 +31,7 @@ export default (io) => {
 
         socket.on("client:deletenote", async (noteId) => {
             await Note.findByIdAndDelete(noteId);
-            emitNotes();
+            emitNotes("confirm");
         });
 
         socket.on("client:getnote", async (noteId) => {
@@ -38,7 +44,7 @@ export default (io) => {
                 title: updatedNote.title,
                 description: updatedNote.description,
             });
-            emitNotes();
+            emitNotes("confirm");
         });
 
         socket.on("disconnect", () => {
